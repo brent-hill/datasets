@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Files</title>
+</head>
+<body>
+    <h1>Available Data Files</h1>
+    <ul id="file-list">
+        <!-- List of data files will be dynamically populated here -->
+    </ul>
+
+    <script>
+        const repoOwner = 'brent-hill';
+        const repoName = 'datasets';
+        const branch = 'main';  // Replace 'main' with the actual branch if different
+
+        async function fetchDataFiles() {
+            const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/`;
+            
+            try {
+                const response = await fetch(apiUrl);
+                const files = await response.json();
+
+                const fileList = document.getElementById('file-list');
+                files.forEach(file => {
+                    if (file.type === 'file') {
+                        const listItem = document.createElement('li');
+                        const link = document.createElement('a');
+                        link.href = `https://${repoOwner}.github.io/${repoName}/${file.path}`;
+                        link.textContent = file.name;
+                        listItem.appendChild(link);
+                        fileList.appendChild(listItem);
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching files:', error);
+            }
+        }
+
+        // Call the function when the page loads
+        window.onload = fetchDataFiles;
+    </script>
+</body>
+</html>
