@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Files</title>
+    <title>Example Datasets</title>
 </head>
 <body>
-    <h1>Available Data Files</h1>
+    <h1>Example Data Files</h1>
     <ul id="file-list">
         <!-- List of data files will be dynamically populated here -->
     </ul>
@@ -19,6 +19,9 @@
         async function fetchDataFiles() {
             const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/`;
             
+            // Valid extensions to filter
+            const validExtensions = ['.rda', '.RData', '.csv', '.txt'];
+
             try {
                 const response = await fetch(apiUrl);
                 const files = await response.json();
@@ -26,12 +29,16 @@
                 const fileList = document.getElementById('file-list');
                 files.forEach(file => {
                     if (file.type === 'file') {
-                        const listItem = document.createElement('li');
-                        const link = document.createElement('a');
-                        link.href = `https://${repoOwner}.github.io/${repoName}/${file.path}`;
-                        link.textContent = file.name;
-                        listItem.appendChild(link);
-                        fileList.appendChild(listItem);
+                        // Check if the file has one of the allowed extensions
+                        const fileExtension = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+                        if (validExtensions.includes(fileExtension)) {
+                            const listItem = document.createElement('li');
+                            const link = document.createElement('a');
+                            link.href = `https://${repoOwner}.github.io/${repoName}/${file.path}`;
+                            link.textContent = file.name;
+                            listItem.appendChild(link);
+                            fileList.appendChild(listItem);
+                        }
                     }
                 });
             } catch (error) {
