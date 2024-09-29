@@ -1,53 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Example Datasets</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Example Datasets</title>
+<style>
+body {
+	font-family: Arial, Helvetica, sans-serif;
+}
+a.visited, a.active, a.link {
+	color: darkseagreen;
+}
+a.hover {
+	color: seagreen;
+}
+</style>
 </head>
 <body>
-    <h1>Example Data Files</h1>
-    <ul id="file-list">
-        <!-- List of data files will be dynamically populated here -->
-    </ul>
+	<h1>Example Data Files</h1>
+	<ul id="file-list">
+		<!-- List of data files will be dynamically populated here -->
+	</ul>
 
-    <script>
-        const repoOwner = 'brent-hill';
-        const repoName = 'datasets';
-        const branch = 'main';  // Replace 'main' with the actual branch if different
+	<script>
+		const repoOwner = 'brent-hill';
+		const repoName = 'datasets';
+		const branch = 'main';
 
-        async function fetchDataFiles() {
-            const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/`;
-            
-            // Valid extensions to filter
-            const validExtensions = ['.rda', '.RData', '.csv', '.txt'];
+		async function fetchDataFiles() {
+			const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/`;
+			
+			// Valid extensions to filter
+			const validExtensions = ['.rda', '.RData', '.csv', '.txt'];
 
-            try {
-                const response = await fetch(apiUrl);
-                const files = await response.json();
+			try {
+				const response = await fetch(apiUrl);
+				const files = await response.json();
 
-                const fileList = document.getElementById('file-list');
-                files.forEach(file => {
-                    if (file.type === 'file') {
-                        // Check if the file has one of the allowed extensions
-                        const fileExtension = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
-                        if (validExtensions.includes(fileExtension)) {
-                            const listItem = document.createElement('li');
-                            const link = document.createElement('a');
-                            link.href = `https://${repoOwner}.github.io/${repoName}/${file.path}`;
-                            link.textContent = file.name;
-                            listItem.appendChild(link);
-                            fileList.appendChild(listItem);
-                        }
-                    }
-                });
-            } catch (error) {
-                console.error('Error fetching files:', error);
-            }
-        }
+				const fileList = document.getElementById('file-list');
+				files.forEach(file => {
+					if (file.type === 'file') {
+						// Check if the file has one of the allowed extensions
+						const fileExtension = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+						if (validExtensions.includes(fileExtension)) {
+							const listItem = document.createElement('li');
+							const link = document.createElement('a');
+							link.href = `https://${repoOwner}.github.io/${repoName}/${file.path}`;
+							link.textContent = file.name;
+							listItem.appendChild(link);
+							fileList.appendChild(listItem);
+						}
+					}
+				});
+			} catch (error) {
+				console.error('Error fetching files:', error);
+			}
+		}
 
-        // Call the function when the page loads
-        window.onload = fetchDataFiles;
-    </script>
+		// Call the function when the page loads
+		window.onload = fetchDataFiles;
+	</script>
 </body>
 </html>
